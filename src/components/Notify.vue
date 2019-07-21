@@ -28,6 +28,10 @@ td {
   justify-content: space-between;
   padding: 12px 6px;
   font-size: 14px;
+  text-align: center;
+  span{
+    width: 100%;
+  }
 }
 
 /* Animation */
@@ -51,3 +55,4 @@ button {
   }
 }
 </style>
+
