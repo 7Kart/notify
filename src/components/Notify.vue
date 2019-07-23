@@ -5,6 +5,12 @@
         <td> <span>{{ message.title }}</span> </td>
       </tr>
     </transition-group>
+    <button 
+      :disabled="countMessage == 0"
+      @click="loadMore" 
+      class="btn btnPrimary"
+      :class="countMessage  > 0 ? 'btnPrimary' : 'btnDisable'"
+    > Load more </button>
   </table>
 </template>
 
@@ -14,6 +20,16 @@ export default {
     messages: {
       type: Array,
       required: true
+    }
+  },
+  methods:{
+    loadMore(){
+      this.$store.dispatch("loadMessage");
+    }
+  },
+  computed:{
+    countMessage(){
+      return this.$store.getters.getMessageFilter.length;
     }
   }
 }
@@ -28,10 +44,6 @@ td {
   justify-content: space-between;
   padding: 12px 6px;
   font-size: 14px;
-  text-align: center;
-  span{
-    width: 100%;
-  }
 }
 
 /* Animation */
@@ -47,6 +59,10 @@ td {
   transform: translateY(30px);
 }
 
+.btnDisable{
+  opacity: 0.4;
+}
+
 button {
   margin-top: 20px;
   &.btnDisabled {
@@ -55,4 +71,3 @@ button {
   }
 }
 </style>
-
