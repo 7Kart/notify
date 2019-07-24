@@ -1,50 +1,41 @@
 import loadMore from "../assets/js/loadMore";
-import { stat } from "fs";
+import axios from "axios";
 
 export default{
     state:{
         messages:[],
-        mainMessage:[]
     },
 
     mutations:{
         setMessages(state, payload){
-            state.messages = payload;
-        },
-        setMainMessages(state, payload){
-            state.mainMessage = payload;
-        },
-        loadMessage(state, payload){
-            state.mainMessage = [...state.mainMessage, ...payload];
+            state.messages = payload.data.notify;
         }
     },
 
     actions:{
-        setMessages({commit}, payload){
-            commit("setMessages", payload);
+        setMessages({commit}){            
+            commit("setIsLoadingMessage",true);         
+            commit("setMessageQueryErr",null); 
+            setTimeout(()=>{
+                axios
+                .get("https://tocode.ru/static/c/vue-pro/notifyApi.php")
+                .then(response => {
+                    commit("setMessages", response);
+                    commit("setIsLoadingMessage",false);
+                })
+                .catch(err => {
+                  commit("setMessageQueryErr",err.toString());    
+                })
+                .finally(() => {
+                    commit("setIsLoadingMessage",false);              
+                });   
+            },800);        
         },
-
-        setMainMessages({commit}, payload){
-            commit("setMainMessages", payload);
-        },
-
-        loadMessage({commit, getters}){
-            let messages = getters.getMessageFilter;
-            commit("loadMessage", loadMore(messages));
-        }
     },
 
     getters:{
         getMessages(state){
             return state.messages
-        },
-        getMainMessages(state){
-            return state.mainMessage
-        },
-        getMessageFilter(state){
-            return state.messages.filter(mes=>{
-                return mes.main == false;
-            });
         }
     }
 }

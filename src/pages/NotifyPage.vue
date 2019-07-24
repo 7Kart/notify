@@ -8,7 +8,6 @@
           <div class="notify-title">
             <p>Notify App</p>
             <svg
-              @click="getNotifyLazy"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -31,14 +30,14 @@
 
           <!-- notify content-->
           <div class="notify__content">
-            
             <!-- preloader -->
-            <preloader v-if="loading" :width="90" :height="90" />
-            
-            <div ng-if="error" class="error"><p>{{error}}</p></div>
-
+            <preloader v-if="getIsLoadingMessage" :width="90" :height="90" />
+            <!-- error -->
+            <div ng-if="getMessageQueryErr" class="error">
+              <p>{{getMessageQueryErr}}</p>
+            </div>
             <!-- notify -->
-            <notify v-if="!loading && !error" :messages="messages" />
+            <notify v-if="!getIsLoadingMessage && !getMessageQueryErr" :messages="getMessages" />
           </div>
         </div>
       </div>
@@ -49,65 +48,23 @@
 <script>
 import notify from "@/components/Notify";
 import axios from "axios";
+import { mapGetters } from 'vuex';
 // UI
 import preloader from "@/components/UI/Preloader";
-import { close } from "fs";
-import { setTimeout } from "timers";
 
 export default {
+  
   components: {
     notify,
     preloader
   },
-  data() {
-    return {
-      loading: false,
-      error: null
-    };
-  },
   computed: {
-    messages() {
-      return this.$store.getters.getMainMessages;
-    }
+    ...mapGetters(["getMessages", "getMessageQueryErr", "getIsLoadingMessage"])
   },
   mounted() {
-    this.getNotifyLazy();
-  },
-  methods: {
-    getNotifyLazy() {
-      this.loading = true;
-      setTimeout(() => {
-        this.getNotify();
-      }, 800);
-    },
-    getNotify() {
-      this.loading = true;
-      axios
-        .get("https://tocode.ru/static/c/vue-pro/notifyApi.php")
-        .then(response => {
-          let res = response.data.notify,
-            messages = [],
-            messagesMain = [];
-
-          res.forEach(notify => {
-            if (notify.main) messagesMain.push(notify);
-            else messages.push(notify);
-          });
-
-          this.$store.dispatch("setMessages", messages);
-          this.$store.dispatch("setMainMessages", messagesMain);
-
-          // this.$store.dispatch('setMessages',res);
-        })
-        .catch(e => {
-          console.log("error", e);
-          this.error = "Error! Network error"
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    }
+    this.$store.dispatch("setMessages");
   }
+
 };
 </script>
 
