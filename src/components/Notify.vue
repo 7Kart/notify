@@ -6,6 +6,7 @@
       </tr>
     </transition-group>
     <button 
+      @click="loadMore"
       :disabled="countMessage == 0"
       class="btn btnPrimary"
       :class="countMessage  > 0 ? 'btnPrimary' : 'btnDisable'"
@@ -23,7 +24,7 @@ export default {
   },
   methods:{
     loadMore(){
-      //this.$store.dispatch("loadMessage");
+      this.$store.dispatch("setMainMessage",3);
     }
   },
   computed:{

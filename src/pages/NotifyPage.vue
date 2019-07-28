@@ -8,6 +8,7 @@
           <div class="notify-title">
             <p>Notify App</p>
             <svg
+              @click="reload"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -37,7 +38,7 @@
               <p>{{getMessageQueryErr}}</p>
             </div>
             <!-- notify -->
-            <notify v-if="!getIsLoadingMessage && !getMessageQueryErr" :messages="getMessages" />
+            <notify v-if="!getIsLoadingMessage && !getMessageQueryErr" :messages="getMainMessage" />
           </div>
         </div>
       </div>
@@ -48,23 +49,28 @@
 <script>
 import notify from "@/components/Notify";
 import axios from "axios";
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 // UI
 import preloader from "@/components/UI/Preloader";
 
-export default {
-  
+export default {  
   components: {
     notify,
     preloader
   },
   computed: {
-    ...mapGetters(["getMessages", "getMessageQueryErr", "getIsLoadingMessage"])
+    ...mapGetters(["getMessages", "getMessageQueryErr", "getIsLoadingMessage", "getMainMessage"])
   },
+
   mounted() {
     this.$store.dispatch("setMessages");
-  }
+  },
 
+  methods:{
+    reload(){
+      this.$store.dispatch("setMessages");
+    }
+  }
 };
 </script>
 

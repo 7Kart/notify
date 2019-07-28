@@ -8,15 +8,24 @@ export default{
 
     mutations:{
         setMessages(state, payload){
-            state.messages = payload.data.notify;
+            state.messages = payload.data.notify.sort(mes=>{
+                return mes.main;
+            });
+        },
+        setMainMessage(state, payload){
+            loadMore(payload, state.messages)
         }
     },
 
     actions:{
+        setMainMessage({commit}, payload){
+            commit("setMainMessage",payload);                 
+        },
         setMessages({commit}){            
             commit("setIsLoadingMessage",true);         
             commit("setMessageQueryErr",null); 
-            setTimeout(()=>{
+            setTimeout
+            (()=>{
                 axios
                 .get("https://tocode.ru/static/c/vue-pro/notifyApi.php")
                 .then(response => {
@@ -36,6 +45,11 @@ export default{
     getters:{
         getMessages(state){
             return state.messages
+        },
+        getMainMessage(state){
+            return state.messages.filter(mes=>{
+                return mes.main == true;
+            })
         }
     }
 }

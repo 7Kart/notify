@@ -1,12 +1,13 @@
-export default function loadMore(res){
-    const messages = [];
-
-    const count = res.length > 3 ? 3 : res.length;
-
-    for(let i=0; i < count; i++){
-        res[i].main = true;
-        messages.push(res[i])
-    }
+export default function loadNext(count, messages){
+    //последнее сообщение в отсортированном массиве с отметкой main=true
+    var startInd = messages.map(mes=>mes.main).lastIndexOf(true)+1;
     
-    return messages;
+    for(var i=count; i > 0; i--){
+        if(startInd < messages.length) {
+            messages[startInd].main = true;
+            startInd++;
+        }else{
+            break;
+        }
+    }  
 }
