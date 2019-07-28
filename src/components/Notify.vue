@@ -7,14 +7,16 @@
     </transition-group>
     <button 
       @click="loadMore"
-      :disabled="countMessage == 0"
+      :disabled="getMessages.length == getMainMessage.length"
       class="btn btnPrimary"
-      :class="countMessage  > 0 ? 'btnPrimary' : 'btnDisable'"
+      :class="getMessages.length != getMainMessage.length ? 'btnPrimary' : 'btnDisable'"
     > Load more </button>
   </table>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
     messages: {
@@ -28,9 +30,7 @@ export default {
     }
   },
   computed:{
-    countMessage(){
-      return this.$store.getters.getMessages.length;
-    }
+    ...mapGetters(["getMessages", "getMainMessage"])    
   }
 }
 </script>

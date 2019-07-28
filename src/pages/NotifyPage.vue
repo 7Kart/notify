@@ -49,7 +49,7 @@
 <script>
 import notify from "@/components/Notify";
 import axios from "axios";
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 // UI
 import preloader from "@/components/UI/Preloader";
 
