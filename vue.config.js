@@ -5,5 +5,4 @@ module.exports = {
     assetsDir: '',
     filenameHashing: true,
     productionSourceMap: false
-
 }
